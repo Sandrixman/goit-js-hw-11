@@ -35,5 +35,5 @@ export default function renderPhotoCard(imageArray, refs) {
     )
     .join('');
 
-  refs.photoCard.insertAdjacentHTML('beforeend', markup);
+  refs.gallery.insertAdjacentHTML('beforeend', markup);
 }

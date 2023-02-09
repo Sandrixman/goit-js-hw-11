@@ -6,4 +6,8 @@
   border-radius: 5px;
   border: none;
   cursor: pointer;
+  display: none;
+  &.visible {
+    display: inline-block;
+  }
 }

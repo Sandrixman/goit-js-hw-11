@@ -1,4 +1,5 @@
 import { Notify } from 'notiflix';
+import axios from 'axios';
 
 const API_KEY = '20761621-2a8f8271b820083cc742db217';
 const BASE_URL = 'https://pixabay.com/api/';
@@ -10,15 +11,20 @@ export default class ImagesApiSevice {
   }
 
   async fetchImages() {
-    const url = `${BASE_URL}?key=${API_KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${this.page}`;
-
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(response.status);
-    }
-    const { total, totalHits, hits } = await response.json();
+    const response = await axios({
+      url: BASE_URL,
+      params: {
+        key: API_KEY,
+        q: this.searchQuery,
+        image_type: 'photo',
+        orientation: 'horizontal',
+        safesearch: true,
+        per_page: 40,
+        page: this.page,
+      },
+    });
+    const { total, totalHits, hits } = await response.data;
     if (total > 1) {
-      this.incrementPage();
       Notify.success(`Hooray! We found ${totalHits} images.`);
       return hits;
     } else {

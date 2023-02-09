@@ -1,8 +1,6 @@
 import './css/main.min.css';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import SimpleLightbox from 'simplelightbox';
-import InfiniteScroll from 'infinite-scroll';
-import axios from 'axios';
 import ImagesApiSevice from './js/ImagesApiSevice';
 import renderPhotoCard from './js/renderPhotoCard';
 import getRefs from './js/refs';
@@ -10,40 +8,31 @@ import spiner from './js/spiner';
 
 const imagesApi = new ImagesApiSevice();
 const refs = getRefs();
-let isBtn = false;
+let btnVisible = false;
 
 refs.searchForm.addEventListener('submit', onSearch);
+refs.btnLoadMore.addEventListener('click', onLoadMore);
 
 async function onSearch(e) {
+  const spin = spiner();
   try {
     e.preventDefault();
 
     clearRender();
+    visibilityBtnLoadMore(btnVisible);
     imagesApi.resetPage();
-    const spin = spiner();
     imagesApi.query = refs.formInput.value.trim();
     const imageArray = await imagesApi.fetchImages();
     spin.stop();
-    renderPhotoCard(imageArray, refs);
-    // new InfiniteScroll('.gallery', {
-    //   path: getPenPath,
-    //   append: '.photo-card',
-    //   status: '.page-load-status',
-    // });
-    // function getPenPath() {
-    //   console.log('getPenPath');
-
-    //   return `/desandro/`;
-    // }
-
-    if (isBtn === true && imageArray === undefined) {
-      deleteLoadBtn();
-      isBtn = false;
+    if (imageArray) {
+      btnVisible = true;
+      visibilityBtnLoadMore(btnVisible);
+      renderPhotoCard(imageArray, refs);
+      createLightbox();
     }
-    createLoadBtn();
-    createLightbox();
   } catch (error) {
     console.log(error);
+    spin.stop();
   }
 }
 
@@ -57,23 +46,16 @@ async function onLoadMore() {
 }
 
 function clearRender() {
-  refs.photoCard.innerHTML = '';
+  refs.gallery.innerHTML = '';
 }
 
-function createLoadBtn() {
-  if (!isBtn) {
-    const btnEl = document.createElement('button');
-    btnEl.classList.add('load-more');
-    btnEl.textContent = 'Load more';
-    btnEl.setAttribute('type', 'button');
-    document.body.append(btnEl);
-    btnEl.addEventListener('click', onLoadMore);
-    isBtn = true;
+function visibilityBtnLoadMore() {
+  if (btnVisible) {
+    refs.btnLoadMore.classList.add('visible');
+  } else {
+    refs.btnLoadMore.classList.remove('visible');
   }
-}
-
-function deleteLoadBtn() {
-  document.querySelector('.load-more').remove();
+  btnVisible = false;
 }
 
 function createLightbox() {
