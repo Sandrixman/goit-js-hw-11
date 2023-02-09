@@ -1,0 +1,11 @@
+@import './base/normalize';
+@import './utils/vars';
+// @import './utils/placeholder';
+// @import './utils/mixins';
+@import './components/page-header';
+@import './components/gallery';
+@import './components/loadBtn';
+
+body {
+  text-align: center;
+}

@@ -1,0 +1,11 @@
+@mixin name($border, $color) {
+  border: $border solid $color;
+}
+
+.btn-red {
+  @include name(2px, green);
+}
+
+.btn-blue {
+  @include name(3px, yellow);
+}

@@ -1,0 +1,18 @@
+//Шаблони
+%button {
+  width: 100px;
+  padding: 10px;
+}
+
+%my-favorite-bg {
+  background: #29ecf3;
+}
+
+.btn-red {
+  @extend %button;
+  background: red;
+}
+
+.btn-blue {
+  @extend %my-favorite-bg;
+}
